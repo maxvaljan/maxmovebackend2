@@ -73,60 +73,63 @@ var __setFunctionName = (this && this.__setFunctionName) || function (f, name, p
     if (typeof name === "symbol") name = name.description ? "[".concat(name.description, "]") : "";
     return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 var common_1 = require("@nestjs/common");
-var supabase_js_1 = require("@supabase/supabase-js");
-var supabaseUrl = 'https://xyzcompany.supabase.co';
-var supabaseKey = 'public-anon-key';
-var supabase = (0, supabase_js_1.createClient)(supabaseUrl, supabaseKey);
+var bcrypt = require("bcrypt");
 var AuthService = function () {
     var _classDecorators = [(0, common_1.Injectable)()];
     var _classDescriptor;
     var _classExtraInitializers = [];
     var _classThis;
     var AuthService = _classThis = /** @class */ (function () {
-        function AuthService_1() {
+        function AuthService_1(usersService, jwtService) {
+            this.usersService = usersService;
+            this.jwtService = jwtService;
         }
-        AuthService_1.prototype.register = function (body) {
+        AuthService_1.prototype.validateUser = function (email, password) {
             return __awaiter(this, void 0, void 0, function () {
-                var email, password, _a, user, error;
+                var user, _a, password_1, result;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
-                        case 0:
-                            email = body.email, password = body.password;
-                            return [4 /*yield*/, supabase.auth.signUp({
-                                    email: email,
-                                    password: password,
-                                })];
+                        case 0: return [4 /*yield*/, this.usersService.findByEmail(email)];
                         case 1:
-                            _a = _b.sent(), user = _a.user, error = _a.error;
-                            if (error) {
-                                throw new Error(error.message);
+                            user = _b.sent();
+                            _a = user;
+                            if (!_a) return [3 /*break*/, 3];
+                            return [4 /*yield*/, bcrypt.compare(password, user.password)];
+                        case 2:
+                            _a = (_b.sent());
+                            _b.label = 3;
+                        case 3:
+                            if (_a) {
+                                password_1 = user.password, result = __rest(user, ["password"]);
+                                return [2 /*return*/, result]; // Return user data without password
                             }
-                            return [2 /*return*/, { message: 'User registered successfully', user: user }];
+                            return [2 /*return*/, null];
                     }
                 });
             });
         };
-        AuthService_1.prototype.login = function (body) {
+        AuthService_1.prototype.login = function (user) {
             return __awaiter(this, void 0, void 0, function () {
-                var email, password, _a, user, error;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
-                        case 0:
-                            email = body.email, password = body.password;
-                            return [4 /*yield*/, supabase.auth.signIn({
-                                    email: email,
-                                    password: password,
-                                })];
-                        case 1:
-                            _a = _b.sent(), user = _a.user, error = _a.error;
-                            if (error) {
-                                throw new Error(error.message);
-                            }
-                            return [2 /*return*/, { message: 'Login successful', user: user }];
-                    }
+                var payload;
+                return __generator(this, function (_a) {
+                    payload = { username: user.email, sub: user.id, role: user.role };
+                    return [2 /*return*/, {
+                            access_token: this.jwtService.sign(payload),
+                        }];
                 });
             });
         };

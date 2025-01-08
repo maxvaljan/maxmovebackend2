@@ -38,44 +38,35 @@ var __setFunctionName = (this && this.__setFunctionName) || function (f, name, p
     return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthModule = void 0;
+exports.RolesGuard = void 0;
 var common_1 = require("@nestjs/common");
-var jwt_1 = require("@nestjs/jwt");
-var passport_1 = require("@nestjs/passport");
-var auth_service_1 = require("./auth.service");
-var auth_controller_1 = require("./auth.controller");
-var jwt_strategy_1 = require("./jwt.strategy");
-var users_module_1 = require("../users/users.module"); // Assuming you have a UsersModule for managing users
-var AuthModule = function () {
-    var _classDecorators = [(0, common_1.Module)({
-            imports: [
-                passport_1.PassportModule,
-                jwt_1.JwtModule.register({
-                    secret: process.env.JWT_SECRET || 'default_secret', // Use an environment variable for the secret
-                    signOptions: { expiresIn: '1h' }, // Token expiration time
-                }),
-                users_module_1.UsersModule, // Dependency for user-related operations
-            ],
-            controllers: [auth_controller_1.AuthController],
-            providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy],
-            exports: [auth_service_1.AuthService],
-        })];
+var RolesGuard = function () {
+    var _classDecorators = [(0, common_1.Injectable)()];
     var _classDescriptor;
     var _classExtraInitializers = [];
     var _classThis;
-    var AuthModule = _classThis = /** @class */ (function () {
-        function AuthModule_1() {
+    var RolesGuard = _classThis = /** @class */ (function () {
+        function RolesGuard_1(reflector) {
+            this.reflector = reflector;
         }
-        return AuthModule_1;
+        RolesGuard_1.prototype.canActivate = function (context) {
+            var requiredRoles = this.reflector.get('roles', context.getHandler());
+            if (!requiredRoles) {
+                return true;
+            }
+            var user = context.switchToHttp().getRequest().user;
+            return requiredRoles.includes(user.role);
+        };
+        return RolesGuard_1;
     }());
-    __setFunctionName(_classThis, "AuthModule");
+    __setFunctionName(_classThis, "RolesGuard");
     (function () {
         var _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(null) : void 0;
         __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
-        AuthModule = _classThis = _classDescriptor.value;
+        RolesGuard = _classThis = _classDescriptor.value;
         if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
         __runInitializers(_classThis, _classExtraInitializers);
     })();
-    return AuthModule = _classThis;
+    return RolesGuard = _classThis;
 }();
-exports.AuthModule = AuthModule;
+exports.RolesGuard = RolesGuard;

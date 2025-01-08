@@ -1,11 +1,19 @@
 "use strict";
-var __runInitializers = (this && this.__runInitializers) || function (thisArg, initializers, value) {
-    var useValue = arguments.length > 2;
-    for (var i = 0; i < initializers.length; i++) {
-        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
-    }
-    return useValue ? value : void 0;
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
     function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
     var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
@@ -32,6 +40,13 @@ var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, 
     }
     if (target) Object.defineProperty(target, contextIn.name, descriptor);
     done = true;
+};
+var __runInitializers = (this && this.__runInitializers) || function (thisArg, initializers, value) {
+    var useValue = arguments.length > 2;
+    for (var i = 0; i < initializers.length; i++) {
+        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
+    }
+    return useValue ? value : void 0;
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -74,58 +89,55 @@ var __setFunctionName = (this && this.__setFunctionName) || function (f, name, p
     return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UsersController = void 0;
+exports.PrismaService = void 0;
 var common_1 = require("@nestjs/common");
-var UsersController = function () {
-    var _classDecorators = [(0, common_1.Controller)('users')];
+var client_1 = require("@prisma/client");
+var PrismaService = function () {
+    var _classDecorators = [(0, common_1.Injectable)()];
     var _classDescriptor;
     var _classExtraInitializers = [];
     var _classThis;
-    var _instanceExtraInitializers = [];
-    var _register_decorators;
-    var _findById_decorators;
-    var _updateRole_decorators;
-    var UsersController = _classThis = /** @class */ (function () {
-        function UsersController_1(usersService) {
-            this.usersService = (__runInitializers(this, _instanceExtraInitializers), usersService);
+    var _classSuper = client_1.PrismaClient;
+    var PrismaService = _classThis = /** @class */ (function (_super) {
+        __extends(PrismaService_1, _super);
+        function PrismaService_1() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
-        UsersController_1.prototype.register = function (body) {
+        PrismaService_1.prototype.onModuleInit = function () {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
-                    return [2 /*return*/, this.usersService.createUser(body.email, body.password, body.role)];
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.$connect()];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
                 });
             });
         };
-        UsersController_1.prototype.findById = function (id) {
+        PrismaService_1.prototype.onModuleDestroy = function () {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
-                    return [2 /*return*/, this.usersService.findByEmail(id)]; // Adjust as needed to fetch by ID
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.$disconnect()];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
                 });
             });
         };
-        UsersController_1.prototype.updateRole = function (id, body) {
-            return __awaiter(this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    return [2 /*return*/, this.usersService.updateUserRole(Number(id), body.role)];
-                });
-            });
-        };
-        return UsersController_1;
-    }());
-    __setFunctionName(_classThis, "UsersController");
+        return PrismaService_1;
+    }(_classSuper));
+    __setFunctionName(_classThis, "PrismaService");
     (function () {
-        var _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(null) : void 0;
-        _register_decorators = [(0, common_1.Post)('register')];
-        _findById_decorators = [(0, common_1.Get)(':id')];
-        _updateRole_decorators = [(0, common_1.Patch)(':id/role')];
-        __esDecorate(_classThis, null, _register_decorators, { kind: "method", name: "register", static: false, private: false, access: { has: function (obj) { return "register" in obj; }, get: function (obj) { return obj.register; } }, metadata: _metadata }, null, _instanceExtraInitializers);
-        __esDecorate(_classThis, null, _findById_decorators, { kind: "method", name: "findById", static: false, private: false, access: { has: function (obj) { return "findById" in obj; }, get: function (obj) { return obj.findById; } }, metadata: _metadata }, null, _instanceExtraInitializers);
-        __esDecorate(_classThis, null, _updateRole_decorators, { kind: "method", name: "updateRole", static: false, private: false, access: { has: function (obj) { return "updateRole" in obj; }, get: function (obj) { return obj.updateRole; } }, metadata: _metadata }, null, _instanceExtraInitializers);
+        var _a;
+        var _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create((_a = _classSuper[Symbol.metadata]) !== null && _a !== void 0 ? _a : null) : void 0;
         __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
-        UsersController = _classThis = _classDescriptor.value;
+        PrismaService = _classThis = _classDescriptor.value;
         if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
         __runInitializers(_classThis, _classExtraInitializers);
     })();
-    return UsersController = _classThis;
+    return PrismaService = _classThis;
 }();
-exports.UsersController = UsersController;
+exports.PrismaService = PrismaService;

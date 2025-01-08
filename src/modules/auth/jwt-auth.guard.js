@@ -1,4 +1,19 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
     function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
     var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
@@ -38,44 +53,31 @@ var __setFunctionName = (this && this.__setFunctionName) || function (f, name, p
     return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthModule = void 0;
+exports.JwtAuthGuard = void 0;
 var common_1 = require("@nestjs/common");
-var jwt_1 = require("@nestjs/jwt");
 var passport_1 = require("@nestjs/passport");
-var auth_service_1 = require("./auth.service");
-var auth_controller_1 = require("./auth.controller");
-var jwt_strategy_1 = require("./jwt.strategy");
-var users_module_1 = require("../users/users.module"); // Assuming you have a UsersModule for managing users
-var AuthModule = function () {
-    var _classDecorators = [(0, common_1.Module)({
-            imports: [
-                passport_1.PassportModule,
-                jwt_1.JwtModule.register({
-                    secret: process.env.JWT_SECRET || 'default_secret', // Use an environment variable for the secret
-                    signOptions: { expiresIn: '1h' }, // Token expiration time
-                }),
-                users_module_1.UsersModule, // Dependency for user-related operations
-            ],
-            controllers: [auth_controller_1.AuthController],
-            providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy],
-            exports: [auth_service_1.AuthService],
-        })];
+var JwtAuthGuard = function () {
+    var _classDecorators = [(0, common_1.Injectable)()];
     var _classDescriptor;
     var _classExtraInitializers = [];
     var _classThis;
-    var AuthModule = _classThis = /** @class */ (function () {
-        function AuthModule_1() {
+    var _classSuper = (0, passport_1.AuthGuard)('jwt');
+    var JwtAuthGuard = _classThis = /** @class */ (function (_super) {
+        __extends(JwtAuthGuard_1, _super);
+        function JwtAuthGuard_1() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
-        return AuthModule_1;
-    }());
-    __setFunctionName(_classThis, "AuthModule");
+        return JwtAuthGuard_1;
+    }(_classSuper));
+    __setFunctionName(_classThis, "JwtAuthGuard");
     (function () {
-        var _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(null) : void 0;
+        var _a;
+        var _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create((_a = _classSuper[Symbol.metadata]) !== null && _a !== void 0 ? _a : null) : void 0;
         __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
-        AuthModule = _classThis = _classDescriptor.value;
+        JwtAuthGuard = _classThis = _classDescriptor.value;
         if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
         __runInitializers(_classThis, _classExtraInitializers);
     })();
-    return AuthModule = _classThis;
+    return JwtAuthGuard = _classThis;
 }();
-exports.AuthModule = AuthModule;
+exports.JwtAuthGuard = JwtAuthGuard;

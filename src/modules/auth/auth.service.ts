@@ -1,37 +1,28 @@
-import { Injectable } from '@nestjs/common';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = 'https://xyzcompany.supabase.co';
-const supabaseKey = 'public-anon-key';
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { UsersService } from '../users/users.service'; // Assume UsersService exists
 
 @Injectable()
 export class AuthService {
-  async register(body: any) {
-    const { email, password } = body;
-    const { user, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-    if (error) {
-      throw new Error(error.message);
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.usersService.findByEmail(email); // Fetch user by email
+    if (user && await bcrypt.compare(password, user.password)) {
+      const { password, ...result } = user;
+      return result; // Return user data without password
     }
-
-    return { message: 'User registered successfully', user };
+    return null;
   }
 
-  async login(body: any) {
-    const { email, password } = body;
-    const { user, error } = await supabase.auth.signIn({
-      email,
-      password,
-    });
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    return { message: 'Login successful', user };
+  async login(user: any) {
+    const payload = { username: user.email, sub: user.id, role: user.role };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
