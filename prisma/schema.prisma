@@ -54,6 +54,13 @@ enum NotificationType {
   system
 }
 
+enum DeliveryStatus {
+  pending
+  out_for_delivery
+  delivered
+  failed
+}
+
 model User {
   id              String   @id @default(uuid())
   name            String
@@ -90,6 +97,18 @@ model Driver {
   orders Order[]
 }
 
+model Delivery {
+  id            String   @id @default(cuid())
+  orderId       String   @unique  // Make orderId unique if one delivery per order
+  deliveryAgent String
+  status        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  order         Order    @relation(fields: [orderId], references: [id])
+}
+
+
 model Order {
   id                String      @id @default(uuid())
   customer_id       String
@@ -111,6 +130,7 @@ model Order {
   driver   Driver?  @relation(fields: [driver_id], references: [id])
   payment  Payment?
   ratings  Rating[]
+  deliveries Delivery[]
 }
 
 model Payment {

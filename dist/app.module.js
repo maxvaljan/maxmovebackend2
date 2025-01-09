@@ -15,6 +15,8 @@ const auth_module_1 = require("./modules/auth/auth.module");
 const users_module_1 = require("./modules/users/users.module");
 const orders_module_1 = require("./modules/orders/orders.module");
 const prisma_service_1 = require("./common/prisma.service"); // Import the PrismaService
+const delivery_service_1 = require("./modules/delivery/delivery.service");
+const delivery_controller_1 = require("./modules/delivery/delivery.controller");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -44,8 +46,8 @@ exports.AppModule = AppModule = __decorate([
             // NotificationsModule, // Notifications (SMS, Email, Push)
             // DatabaseModule,      // Database-specific logic (if needed)
         ],
-        controllers: [], // Global controllers can be added here
-        providers: [prisma_service_1.PrismaService], // Global providers (e.g., interceptors, guards) can go here
+        controllers: [delivery_controller_1.DeliveryController], // Global controllers can be added here
+        providers: [delivery_service_1.DeliveryService, prisma_service_1.PrismaService], // Global providers (e.g., interceptors, guards) can go here
         exports: [prisma_service_1.PrismaService], // Export it if other modules need it
     })
 ], AppModule);

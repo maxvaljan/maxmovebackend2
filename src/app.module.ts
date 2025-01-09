@@ -5,6 +5,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { PrismaService } from './common/prisma.service'; // Import the PrismaService
+import { DeliveryService } from './modules/delivery/delivery.service';
+import { DeliveryController } from './modules/delivery/delivery.controller';
 
 @Module({
   imports: [
@@ -33,8 +35,8 @@ import { PrismaService } from './common/prisma.service'; // Import the PrismaSer
     // NotificationsModule, // Notifications (SMS, Email, Push)
     // DatabaseModule,      // Database-specific logic (if needed)
   ],
-  controllers: [], // Global controllers can be added here
-  providers: [PrismaService],   // Global providers (e.g., interceptors, guards) can go here
+  controllers: [DeliveryController], // Global controllers can be added here
+  providers: [DeliveryService, PrismaService],   // Global providers (e.g., interceptors, guards) can go here
   exports: [PrismaService],   // Export it if other modules need it
 })
 export class AppModule {}
