@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm'; // or PrismaModule if using Prisma
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { OrdersModule } from './modules/orders/orders.module';
+import { PrismaService } from './common/prisma.service'; // Import the PrismaService
 
 @Module({
   imports: [
@@ -26,12 +28,13 @@ import { UsersModule } from './modules/users/users.module';
     // Application Modules
     AuthModule,          // Authentication and Authorization
     UsersModule,         // User Management (Admins, Drivers, Customers)
-    // OrdersModule,        // Order Management
+    OrdersModule,        // Order Management
     // DriversModule,       // Driver Features (location, availability)
     // NotificationsModule, // Notifications (SMS, Email, Push)
     // DatabaseModule,      // Database-specific logic (if needed)
   ],
   controllers: [], // Global controllers can be added here
-  providers: [],   // Global providers (e.g., interceptors, guards) can go here
+  providers: [PrismaService],   // Global providers (e.g., interceptors, guards) can go here
+  exports: [PrismaService],   // Export it if other modules need it
 })
 export class AppModule {}

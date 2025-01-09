@@ -5,6 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
@@ -12,6 +13,8 @@ const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm"); // or PrismaModule if using Prisma
 const auth_module_1 = require("./modules/auth/auth.module");
 const users_module_1 = require("./modules/users/users.module");
+const orders_module_1 = require("./modules/orders/orders.module");
+const prisma_service_1 = require("./common/prisma.service"); // Import the PrismaService
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -26,7 +29,7 @@ exports.AppModule = AppModule = __decorate([
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'postgres', // or your database type
                 host: process.env.DB_HOST || 'localhost',
-                port: +process.env.DB_PORT || 5432,
+                port: +((_a = process.env.DB_PORT) !== null && _a !== void 0 ? _a : 5432),
                 username: process.env.DB_USERNAME || 'postgres',
                 password: process.env.DB_PASSWORD || 'password',
                 database: process.env.DB_NAME || 'delivery_db',
@@ -36,12 +39,13 @@ exports.AppModule = AppModule = __decorate([
             // Application Modules
             auth_module_1.AuthModule, // Authentication and Authorization
             users_module_1.UsersModule, // User Management (Admins, Drivers, Customers)
-            OrdersModule, // Order Management
-            DriversModule, // Driver Features (location, availability)
-            NotificationsModule, // Notifications (SMS, Email, Push)
-            DatabaseModule, // Database-specific logic (if needed)
+            orders_module_1.OrdersModule, // Order Management
+            // DriversModule,       // Driver Features (location, availability)
+            // NotificationsModule, // Notifications (SMS, Email, Push)
+            // DatabaseModule,      // Database-specific logic (if needed)
         ],
         controllers: [], // Global controllers can be added here
-        providers: [], // Global providers (e.g., interceptors, guards) can go here
+        providers: [prisma_service_1.PrismaService], // Global providers (e.g., interceptors, guards) can go here
+        exports: [prisma_service_1.PrismaService], // Export it if other modules need it
     })
 ], AppModule);

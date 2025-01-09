@@ -12,18 +12,28 @@ export class UsersService {
     });
   }
 
-  async createUser(email: string, password: string, role: string) {
+  async createUser(
+    email: string,
+    password: string,
+    role: string,
+    name: string,
+    phone: string,
+    userType: 'customer' | 'driver',
+  ) {
     const hashedPassword = await bcrypt.hash(password, 10);
     return this.prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         role,
+        name,
+        phone,
+        user_type: userType,
       },
     });
   }
 
-  async updateUserRole(userId: number, role: string) {
+  async updateUserRole(userId: string, role: string) {
     return this.prisma.user.update({
       where: { id: userId },
       data: { role },
