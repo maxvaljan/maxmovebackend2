@@ -1,34 +1,166 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
 }
 
+enum UserType {
+  customer
+  driver
+  admin
+}
+
+enum VehicleType {
+  bike
+  car
+  van
+  truck
+}
+
+enum DriverStatus {
+  available
+  busy
+  offline
+}
+
+enum OrderStatus {
+  pending
+  accepted
+  in_transit
+  completed
+  cancelled
+}
+
+enum PaymentMethod {
+  card
+  cash
+  wallet
+  other
+}
+
+enum PaymentStatus {
+  pending
+  completed
+  failed
+}
+
+enum NotificationType {
+  order_update
+  promo
+  system
+}
+
 model User {
-  id        Int     @id @default(autoincrement())
-  email     String  @unique
-  password  String
-  createdAt DateTime @default(now())
-  bookings  Booking[] // Relation to Booking
+  id              String   @id @default(uuid())
+  name            String
+  email           String   @unique
+  phone           String   @unique
+  password        String
+  user_type       UserType
+  role            String?  
+  profile_picture String?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  // Relations
+  driver          Driver?        @relation("UserDriver")
+  orders          Order[]
+  notifications   Notification[]
+  ratingsGiven    Rating[]       @relation("RaterRatings")
+  ratingsReceived Rating[]       @relation("RateeRatings")
+  locations       Location[]
 }
 
-model Booking {
-  id        Int     @id @default(autoincrement())
-  userId    Int
-  pickup    String
-  dropoff   String
-  createdAt DateTime @default(now())
+model Driver {
+  id             String       @id @default(uuid())
+  vehicle_type   VehicleType
+  vehicle_number String
+  status         DriverStatus @default(offline)
+  latitude       Decimal
+  longitude      Decimal
+  rating         Float?
+  created_at     DateTime     @default(now())
 
-  user      User    @relation(fields: [userId], references: [id]) // Relation to user
+  // Relations
+  user   User    @relation("UserDriver", fields: [id], references: [id])
+  orders Order[]
 }
 
-//
+model Order {
+  id                String      @id @default(uuid())
+  customer_id       String
+  driver_id         String?
+  pickup_address    String
+  dropoff_address   String
+  pickup_latitude   Decimal
+  pickup_longitude  Decimal
+  dropoff_latitude  Decimal
+  dropoff_longitude Decimal
+  status            OrderStatus @default(pending)
+  price             Decimal
+  items             Json        @default("[]") // Add default value if required
+  created_at        DateTime    @default(now())
+  updated_at        DateTime    @updatedAt
+
+  // Relations
+  customer User     @relation(fields: [customer_id], references: [id])
+  driver   Driver?  @relation(fields: [driver_id], references: [id])
+  payment  Payment?
+  ratings  Rating[]
+}
+
+model Payment {
+  id             String        @id @default(uuid())
+  order_id       String        @unique
+  amount         Decimal
+  payment_method PaymentMethod
+  status         PaymentStatus @default(pending)
+  created_at     DateTime      @default(now())
+
+  // Relations
+  order Order @relation(fields: [order_id], references: [id])
+}
+
+model Rating {
+  id         String   @id @default(uuid())
+  order_id   String
+  rater_id   String
+  ratee_id   String
+  rating     Int
+  comments   String?
+  created_at DateTime @default(now())
+
+  // Relations
+  order Order @relation(fields: [order_id], references: [id])
+  rater User  @relation(fields: [rater_id], references: [id], name: "RaterRatings")
+  ratee User  @relation(fields: [ratee_id], references: [id], name: "RateeRatings")
+}
+
+model Location {
+  id         String   @id @default(uuid())
+  user_id    String
+  address    String
+  latitude   Decimal
+  longitude  Decimal
+  label      String?
+  created_at DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model Notification {
+  id         String           @id @default(uuid())
+  user_id    String
+  type       NotificationType
+  message    String
+  is_read    Boolean          @default(false)
+  created_at DateTime         @default(now())
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id])
+}
