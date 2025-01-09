@@ -15,23 +15,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrdersController = void 0;
 const common_1 = require("@nestjs/common");
 const orders_service_1 = require("./orders.service");
+const order_dto_1 = require("./dtos/order.dto");
+const client_1 = require("@prisma/client");
 let OrdersController = class OrdersController {
     constructor(ordersService) {
         this.ordersService = ordersService;
     }
     async createOrder(createOrderDto) {
-        const { customerId, items } = createOrderDto;
-        return this.ordersService.createOrder(customerId, items);
+        return this.ordersService.createOrder(createOrderDto);
     }
-    async getOrderById(orderId) {
-        return this.ordersService.getOrderById(orderId);
+    async getOrderById(id) {
+        return this.ordersService.getOrderById(id);
     }
-    async updateOrderStatus(orderId, updateStatusDto) {
-        const { status } = updateStatusDto;
-        return this.ordersService.updateOrderStatus(orderId, status);
+    async updateOrderStatus(id, updateOrderStatusDto) {
+        return this.ordersService.updateOrderStatus(id, updateOrderStatusDto.status);
     }
-    async getAllOrders(status) {
-        return this.ordersService.getAllOrders(status);
+    async getAllOrders(status, // Ensure status is of the correct type
+    page = 1, limit = 10) {
+        return this.ordersService.getAllOrders(status, Number(page), Number(limit));
     }
 };
 exports.OrdersController = OrdersController;
@@ -39,7 +40,7 @@ __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [order_dto_1.CreateOrderDto]),
     __metadata("design:returntype", Promise)
 ], OrdersController.prototype, "createOrder", null);
 __decorate([
@@ -50,18 +51,20 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], OrdersController.prototype, "getOrderById", null);
 __decorate([
-    (0, common_1.Patch)(':id/status'),
+    (0, common_1.Put)(':id/status'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String, order_dto_1.UpdateOrderStatusDto]),
     __metadata("design:returntype", Promise)
 ], OrdersController.prototype, "updateOrderStatus", null);
 __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)('status')),
+    __param(1, (0, common_1.Query)('page')),
+    __param(2, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], OrdersController.prototype, "getAllOrders", null);
 exports.OrdersController = OrdersController = __decorate([

@@ -21,7 +21,11 @@ let RolesGuard = class RolesGuard {
         if (!requiredRoles) {
             return true;
         }
-        const { user } = context.switchToHttp().getRequest();
+        const request = context.switchToHttp().getRequest();
+        const user = request === null || request === void 0 ? void 0 : request.user; // Safely access `user`
+        if (!(user === null || user === void 0 ? void 0 : user.role)) {
+            return false; // Return false if `user` or `role` is undefined
+        }
         return requiredRoles.includes(user.role);
     }
 };

@@ -19,14 +19,19 @@ let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
-    async register(body) {
-        return this.usersService.createUser(body.email, body.password, body.role);
+    async createUser(body) {
+        const { email, password, role, name, phone, userType } = body;
+        if (!name || !phone || !userType) {
+            // Default values for registration
+            return this.usersService.createUser(email, password, role, 'Default Name', '0000000000', 'customer');
+        }
+        return this.usersService.createUser(email, password, role, name, phone, userType);
     }
     async findById(id) {
-        return this.usersService.findByEmail(id); // Adjust as needed to fetch by ID
+        return this.usersService.findById(id); // Fetch user by ID
     }
     async updateRole(id, body) {
-        return this.usersService.updateUserRole(Number(id), body.role);
+        return this.usersService.updateUserRole(id, body.role); // Pass id as a string
     }
 };
 exports.UsersController = UsersController;
@@ -36,7 +41,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "register", null);
+], UsersController.prototype, "createUser", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

@@ -11,6 +11,7 @@ generator client {
 enum UserType {
   customer
   driver
+  admin
 }
 
 enum VehicleType {
@@ -101,6 +102,7 @@ model Order {
   dropoff_longitude Decimal
   status            OrderStatus @default(pending)
   price             Decimal
+  items             Json        @default("[]") // Add default value if required
   created_at        DateTime    @default(now())
   updated_at        DateTime    @updatedAt
 

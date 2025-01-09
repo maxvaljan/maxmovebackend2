@@ -8,14 +8,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrdersModule = void 0;
 const common_1 = require("@nestjs/common");
-const orders_service_1 = require("./orders.service");
 const orders_controller_1 = require("./orders.controller");
+const orders_service_1 = require("./orders.service");
+const prisma_service_1 = require("../../common/prisma.service"); // Ensure you have PrismaService available
 let OrdersModule = class OrdersModule {
 };
 exports.OrdersModule = OrdersModule;
 exports.OrdersModule = OrdersModule = __decorate([
     (0, common_1.Module)({
-        controllers: [orders_controller_1.OrdersController],
-        exports: [orders_service_1.OrdersService], // Export OrdersService if other modules need it
+        controllers: [orders_controller_1.OrdersController], // Registers the controller
+        providers: [orders_service_1.OrdersService, prisma_service_1.PrismaService], // Registers the service and PrismaService
+        exports: [orders_service_1.OrdersService], // Exports OrdersService if needed by other modules
     })
 ], OrdersModule);
