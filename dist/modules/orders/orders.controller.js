@@ -12,11 +12,17 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OrdersController = void 0;
+exports.OrdersController = exports.OrderStatus = void 0;
 const common_1 = require("@nestjs/common");
 const orders_service_1 = require("./orders.service");
 const order_dto_1 = require("./dtos/order.dto");
-const client_1 = require("@prisma/client");
+// Create a local enum
+var OrderStatus;
+(function (OrderStatus) {
+    OrderStatus["pending"] = "pending";
+    OrderStatus["completed"] = "completed";
+    OrderStatus["cancelled"] = "cancelled";
+})(OrderStatus || (exports.OrderStatus = OrderStatus = {}));
 let OrdersController = class OrdersController {
     constructor(ordersService) {
         this.ordersService = ordersService;
