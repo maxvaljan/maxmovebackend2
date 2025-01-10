@@ -5,7 +5,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
@@ -27,16 +26,16 @@ exports.AppModule = AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
             }),
-            // Database Configuration (TypeORM example)
+            // TypeORM Configuration
             typeorm_1.TypeOrmModule.forRoot({
-                type: 'postgres', // or your database type
-                host: process.env.DB_HOST || 'localhost',
-                port: +((_a = process.env.DB_PORT) !== null && _a !== void 0 ? _a : 5432),
-                username: process.env.DB_USERNAME || 'postgres',
-                password: process.env.DB_PASSWORD || 'password',
-                database: process.env.DB_NAME || 'delivery_db',
-                autoLoadEntities: true,
-                synchronize: true, // Disable in production
+                type: 'postgres',
+                url: process.env.DATABASE_URL || process.env.DIRECT_URL, // Use your .env variable
+                ssl: {
+                    rejectUnauthorized: false, // Required for Supabase
+                },
+                autoLoadEntities: true, // Automatically load entities
+                synchronize: true, // Automatically sync schema (disable in production)
+                logging: true, // Enable SQL query logging
             }),
             // Application Modules
             auth_module_1.AuthModule, // Authentication and Authorization
