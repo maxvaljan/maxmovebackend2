@@ -15,16 +15,16 @@ import { DeliveryController } from './modules/delivery/delivery.controller';
       isGlobal: true,
     }),
 
-    // Database Configuration (TypeORM example)
+    // TypeORM Configuration
     TypeOrmModule.forRoot({
-      type: 'postgres', // or your database type
-      host: process.env.DB_HOST || 'localhost',
-      port: +(process.env.DB_PORT ?? 5432),
-      username: process.env.DB_USERNAME || 'postgres',
-      password: process.env.DB_PASSWORD || 'password',
-      database: process.env.DB_NAME || 'delivery_db',
-      autoLoadEntities: true,
-      synchronize: true, // Disable in production
+      type: 'postgres',
+      url: process.env.DATABASE_URL || process.env.DIRECT_URL, // Use your .env variable
+      ssl: {
+        rejectUnauthorized: false, // Required for Supabase
+      },
+      autoLoadEntities: true, // Automatically load entities
+      synchronize: true, // Automatically sync schema (disable in production)
+      logging: true, // Enable SQL query logging
     }),
 
     // Application Modules

@@ -11,6 +11,10 @@ import { BadRequestException } from '@nestjs/common';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async findAllUsers() {
+    return this.prisma.user.findMany(); // Example Prisma query
+  }
+  
   async createUser(
     email: string,
     password: string,

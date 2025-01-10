@@ -19,6 +19,9 @@ let UsersService = class UsersService {
     constructor(prisma) {
         this.prisma = prisma;
     }
+    async findAllUsers() {
+        return this.prisma.user.findMany(); // Example Prisma query
+    }
     async createUser(email, password, role, name, phone, userType) {
         if (!Object.values(client_1.UserType).includes(userType)) {
             throw new common_3.BadRequestException(`Invalid user type: ${userType}`);
