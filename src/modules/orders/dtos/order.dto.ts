@@ -1,5 +1,11 @@
 import { IsString, IsNotEmpty, IsNumber, IsArray, IsEnum } from 'class-validator';
-import { LocalOrderStatus } from '../order-status.enum';
+
+// Create a local enum
+export enum OrderStatus {
+  pending = 'pending',
+  completed = 'completed',
+  cancelled = 'cancelled',
+}
 
 export class CreateOrderDto {
   @IsString()
