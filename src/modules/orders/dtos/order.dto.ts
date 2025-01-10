@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, IsNumber, IsArray, IsEnum } from 'class-validator';
-import { OrderStatus } from '@prisma/client';
+import { LocalOrderStatus } from '../order-status.enum';
 
 export class CreateOrderDto {
   @IsString()
