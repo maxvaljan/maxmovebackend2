@@ -1,7 +1,14 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma.service';
-import { Order, OrderStatus } from '@prisma/client';
+import { Order } from '@prisma/client';
 import { CreateOrderDto } from './dtos/order.dto';
+
+// Create a local enum
+export enum OrderStatus {
+  pending = 'pending',
+  completed = 'completed',
+  cancelled = 'cancelled',
+}
 
 @Injectable()
 export class OrdersService {

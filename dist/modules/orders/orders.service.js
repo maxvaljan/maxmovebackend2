@@ -9,10 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OrdersService = void 0;
+exports.OrdersService = exports.OrderStatus = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../common/prisma.service");
-const client_1 = require("@prisma/client");
+// Create a local enum
+var OrderStatus;
+(function (OrderStatus) {
+    OrderStatus["pending"] = "pending";
+    OrderStatus["completed"] = "completed";
+    OrderStatus["cancelled"] = "cancelled";
+})(OrderStatus || (exports.OrderStatus = OrderStatus = {}));
 let OrdersService = class OrdersService {
     constructor(prisma) {
         this.prisma = prisma;
@@ -44,7 +50,7 @@ let OrdersService = class OrdersService {
         return order;
     }
     async updateOrderStatus(orderId, status) {
-        const validStatuses = Object.values(client_1.OrderStatus);
+        const validStatuses = Object.values(OrderStatus);
         if (!validStatuses.includes(status)) {
             throw new common_1.BadRequestException(`Invalid status: ${status}`);
         }

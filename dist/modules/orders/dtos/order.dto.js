@@ -9,9 +9,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateOrderStatusDto = exports.CreateOrderDto = void 0;
+exports.UpdateOrderStatusDto = exports.CreateOrderDto = exports.OrderStatus = void 0;
 const class_validator_1 = require("class-validator");
-const client_1 = require("@prisma/client");
+// Create a local enum
+var OrderStatus;
+(function (OrderStatus) {
+    OrderStatus["pending"] = "pending";
+    OrderStatus["completed"] = "completed";
+    OrderStatus["cancelled"] = "cancelled";
+})(OrderStatus || (exports.OrderStatus = OrderStatus = {}));
 class CreateOrderDto {
     constructor() {
         this.customerId = '';
@@ -23,7 +29,7 @@ class CreateOrderDto {
         this.dropoffLatitude = 0;
         this.dropoffLongitude = 0;
         this.items = [];
-        this.status = client_1.OrderStatus.pending; // Example default
+        this.status = OrderStatus.pending; // Example default
     }
 }
 exports.CreateOrderDto = CreateOrderDto;
@@ -81,7 +87,7 @@ class UpdateOrderStatusDto {
 }
 exports.UpdateOrderStatusDto = UpdateOrderStatusDto;
 __decorate([
-    (0, class_validator_1.IsEnum)(client_1.OrderStatus),
+    (0, class_validator_1.IsEnum)(OrderStatus),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], UpdateOrderStatusDto.prototype, "status", void 0);
