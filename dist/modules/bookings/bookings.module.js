@@ -10,7 +10,7 @@ exports.BookingModule = void 0;
 const common_1 = require("@nestjs/common");
 const bookings_controller_1 = require("./bookings.controller");
 const bookings_service_1 = require("./bookings.service");
-const prisma_service_1 = require("../../common/prisma.service"); // Ensure you have PrismaService available
+const prisma_service_1 = require("../../common/prisma.service");
 let BookingModule = class BookingModule {
 };
 exports.BookingModule = BookingModule;
