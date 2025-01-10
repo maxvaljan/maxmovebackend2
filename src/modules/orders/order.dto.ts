@@ -3,5 +3,5 @@ import { OrderStatus } from './order-status.enum';
 
 export class OrderDto {
     @IsEnum(OrderStatus)
-    status: OrderStatus;
+    status!: OrderStatus;
 }

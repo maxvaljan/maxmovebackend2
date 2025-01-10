@@ -2,7 +2,13 @@ import { Controller, Get, Post, Body, Param, Query, Put } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto, UpdateOrderStatusDto } from './dtos/order.dto';
 import { Order } from '@prisma/client';
-import { OrderStatus } from '@prisma/client';
+
+// Create a local enum
+export enum OrderStatus {
+  pending = 'pending',
+  completed = 'completed',
+  cancelled = 'cancelled',
+}
 
 
 @Controller('orders')

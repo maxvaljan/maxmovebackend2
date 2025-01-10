@@ -1,4 +1,4 @@
-export enum LocalOrderStatus {
+export enum OrderStatus {
     pending = 'pending',
     completed = 'completed',
     cancelled = 'cancelled',

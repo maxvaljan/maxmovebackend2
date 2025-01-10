@@ -9,57 +9,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateOrderStatusDto = exports.CreateOrderDto = void 0;
+exports.OrderDto = void 0;
 const class_validator_1 = require("class-validator");
-const client_1 = require("@prisma/client");
-class CreateOrderDto {
+const order_status_enum_1 = require("./order-status.enum");
+class OrderDto {
 }
-exports.CreateOrderDto = CreateOrderDto;
+exports.OrderDto = OrderDto;
 __decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsEnum)(order_status_enum_1.OrderStatus),
     __metadata("design:type", String)
-], CreateOrderDto.prototype, "customerId", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreateOrderDto.prototype, "pickupAddress", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreateOrderDto.prototype, "dropoffAddress", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], CreateOrderDto.prototype, "price", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], CreateOrderDto.prototype, "pickupLatitude", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], CreateOrderDto.prototype, "pickupLongitude", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], CreateOrderDto.prototype, "dropoffLatitude", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], CreateOrderDto.prototype, "dropoffLongitude", void 0);
-__decorate([
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", Array)
-], CreateOrderDto.prototype, "items", void 0);
-class UpdateOrderStatusDto {
-}
-exports.UpdateOrderStatusDto = UpdateOrderStatusDto;
-__decorate([
-    (0, class_validator_1.IsEnum)(client_1.OrderStatus),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], UpdateOrderStatusDto.prototype, "status", void 0);
+], OrderDto.prototype, "status", void 0);
